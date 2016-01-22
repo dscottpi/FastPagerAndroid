@@ -6,8 +6,6 @@ import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -24,6 +22,8 @@ public class Fastpager extends RelativeLayout implements SeekBar.OnSeekBarChange
     private boolean smoothScroll = false;
     private View mainLayout;
     private CardView cardView;
+
+    private final static String FADE_KEY = "FADE";
 
 
     public Fastpager(Context context) {
@@ -72,6 +72,14 @@ public class Fastpager extends RelativeLayout implements SeekBar.OnSeekBarChange
 
             }
         });
+
+        viewPager.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         updateCurPos(seekBar.getProgress(), seekBar.getMax());
     }
 
@@ -112,5 +120,27 @@ public class Fastpager extends RelativeLayout implements SeekBar.OnSeekBarChange
     public void setViewPager(ViewPager viewPager) {
         this.viewPager = viewPager;
         initViewPager();
+    }
+
+    /**
+     * Fade in/out the view.
+     */
+    public void toggleFade() {
+        if (context.getSharedPreferences(FADE_KEY, 0).getBoolean(FADE_KEY, false)) {
+
+            context.getSharedPreferences(FADE_KEY, 0).edit()
+                    .putBoolean(FADE_KEY, false).apply();
+
+            cardView.animate().alpha(1).setDuration(300).start();
+            cardView.setVisibility(View.VISIBLE);
+
+        } else {
+
+            context.getSharedPreferences(FADE_KEY, 0).edit()
+                    .putBoolean(FADE_KEY, true).apply();
+
+            cardView.animate().alpha(0).setDuration(300).start();
+            cardView.setVisibility(View.GONE);
+        }
     }
 }
